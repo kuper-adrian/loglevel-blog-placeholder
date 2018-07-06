@@ -1,0 +1,28 @@
+body {
+  max-width: 1000px;
+  margin: 0 auto;
+  color: white;
+  background-color: black;
+  padding: 50px 50px;
+  font-family: 'Courier New', Courier, monospace
+}
+
+.color-green {
+  color: forestgreen;
+}
+
+.color-grey {
+  color: grey;
+}
+
+.color-light-blue {
+  color: lightskyblue;
+}
+
+.color-dark-blue {
+  color: royalblue;
+}
+
+.color-mud {
+  color: chocolate;
+}
