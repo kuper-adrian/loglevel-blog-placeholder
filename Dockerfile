@@ -6,7 +6,7 @@ ENV PORT=8080
 ENV NODE_ENV=${environment}}
 
 # Create app directory
-WORKDIR /usr/src/loglevel-blog
+WORKDIR /loglevel-blog
 
 COPY package*.json ./
 RUN npm install
@@ -18,4 +18,4 @@ RUN mkdir secrets
 VOLUME /secrets
 
 EXPOSE 8080
-CMD [ "npm", "start" ]
+ENTRYPOINT [ "node", "./bin/www" ]
