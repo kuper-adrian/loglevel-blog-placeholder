@@ -4,22 +4,43 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('loglevel-blog-placeholder:server');
-var http = require('http');
+const app = require('../app');
+const debug = require('debug')('loglevel-blog-placeholder:server');
+const https = require('https');
+const fs = require('fs');
+const commandLineArgs = require('command-line-args')
+
+
+const cmdArgDefinitions = [
+  { name: 'password', alias: 'p', type: String },
+];
+
+const cmdArgs = commandLineArgs(cmdArgDefinitions);
+
+if (cmdArgs.password === undefined || cmdArgs.password === null) {
+  throw new Error('No password for private key specified! Please use "-p" option.');
+}
 
 /**
  * Get port from environment and store in Express.
  */
-
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
+const privateKey = fs.readFileSync('./secrets/privkey.pem');
+const certificate = fs.readFileSync('./secrets/cert.pem');
 
-var server = http.createServer(app);
+/**
+ * Create HTTPS server.
+ */
+const server = https.createServer(
+  { 
+    key: privateKey, 
+    cert: certificate, 
+    passphrase: cmdArgs.password
+  },
+  app,
+);
 
 /**
  * Listen on provided port, on all network interfaces.

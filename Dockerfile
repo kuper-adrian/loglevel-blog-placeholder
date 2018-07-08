@@ -13,5 +13,9 @@ RUN npm install
 
 COPY . .
 
+RUN mkdir secrets
+
+VOLUME /secrets
+
 EXPOSE 8080
 CMD [ "npm", "start" ]
