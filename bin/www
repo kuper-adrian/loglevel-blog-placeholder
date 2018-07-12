@@ -3,10 +3,9 @@
 /**
  * Module dependencies.
  */
-
 const app = require('../app');
 const debug = require('debug')('loglevel-blog-placeholder:server');
-const https = require('https');
+const http = require('http');
 const fs = require('fs');
 const commandLineArgs = require('command-line-args')
 
@@ -15,11 +14,10 @@ const cmdArgDefinitions = [
   { name: 'password', alias: 'p', type: String },
 ];
 
+let serverOptions = {};
+
 const cmdArgs = commandLineArgs(cmdArgDefinitions);
 
-if (cmdArgs.password === undefined || cmdArgs.password === null) {
-  throw new Error('No password for private key specified! Please use "-p" option.');
-}
 
 /**
  * Get port from environment and store in Express.
@@ -27,20 +25,11 @@ if (cmdArgs.password === undefined || cmdArgs.password === null) {
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-const privateKey = fs.readFileSync('./secrets/privkey.pem');
-const certificate = fs.readFileSync('./secrets/cert.pem');
 
 /**
  * Create HTTPS server.
  */
-const server = https.createServer(
-  { 
-    key: privateKey, 
-    cert: certificate, 
-    passphrase: cmdArgs.password
-  },
-  app,
-);
+const server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -53,7 +42,6 @@ server.on('listening', onListening);
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
   var port = parseInt(val, 10);
 
@@ -99,9 +87,8 @@ function onError(error) {
 }
 
 /**
- * Event listener for HTTP server "listening" event.
+ * Event listener for HTTPS server "listening" event.
  */
-
 function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
