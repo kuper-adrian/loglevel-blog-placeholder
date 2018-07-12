@@ -1,7 +1,7 @@
 FROM nginx
 
-COPY  default.conf /etc/nginx/conf.d/
+COPY default.conf /etc/nginx/conf.d/
 
-RUN mkdir secrets
+RUN mkdir /etc/letsencrypt
 
-VOLUME secrets
+VOLUME /etc/letsencrypt
